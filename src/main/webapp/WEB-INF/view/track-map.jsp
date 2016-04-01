@@ -12,6 +12,8 @@
 <body>
 
 <c:url var="downloadUrl" value="/track/${trackId}/map/download"/>
+<c:url var="geotagsUrl" value="/track/${trackId}/geotags"/>
+<c:url var="imgUrl" value="/track/${trackId}/image/"/>
 
 <div id="map"></div>
 
@@ -51,6 +53,36 @@
 
                 poly.setMap(map);
                 map.fitBounds(bounds);
+            }
+        });
+        $.ajax({
+            type: "GET",
+            url: "${geotagsUrl}",
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function(json) {
+
+                var infowindow = new google.maps.InfoWindow();
+
+                for (i in json) {
+                    var imgsrc = "<div><img width='320' height='180' src='${imgUrl}" + json[i].imageId + "'/></div>";
+                    createMarker(imgsrc, json[i].lat, json[i].lng);
+                }
+
+                function createMarker(add,lat,lng) {
+                    var contentString = add;
+                    var marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(lat,lng),
+                        map: map,
+                    });
+
+                    google.maps.event.addListener(marker, 'click', function() {
+                        infowindow.setContent(contentString);
+                        infowindow.open(map,marker);
+                    });
+
+                }
+
             }
         });
     }

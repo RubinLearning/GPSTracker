@@ -1,5 +1,6 @@
 package service;
 
+import DTO.IMGGeoTagDTO;
 import domain.Track;
 import domain.TrackIMG;
 import org.apache.log4j.Logger;
@@ -14,6 +15,7 @@ import utils.GPSTrackerException;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -67,4 +69,5 @@ public class ImageServiceHibernateImpl implements ImageService{
         TrackIMG image = (TrackIMG) session.get(TrackIMG.class, id);
         session.delete(image);
     }
+
 }

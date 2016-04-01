@@ -1,5 +1,6 @@
 package service;
 
+import DTO.IMGGeoTagDTO;
 import service.interfaces.TrackService;
 import domain.Track;
 import domain.TrackGPX;
@@ -11,10 +12,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import utils.GPSTrackerException;
+import utils.geotagreader.GeoTag;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional

@@ -1,5 +1,6 @@
 package service.interfaces;
 
+import DTO.IMGGeoTagDTO;
 import domain.TrackIMG;
 import org.springframework.web.multipart.MultipartFile;
 import utils.GPSTrackerException;
