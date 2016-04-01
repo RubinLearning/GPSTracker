@@ -3,7 +3,7 @@ package utils;
 public enum GPSTrackerErrorType {
 
     LACK_OF_TRACK_FILE("Track file isn't available yet!"),
-    OPERATION_NOT_ALLOWED("This operation isn't allowed!");
+    LACK_OF_IMAGE_FILE("Image isn't available yet!");
 
     private String name;
 

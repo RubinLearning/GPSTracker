@@ -12,6 +12,8 @@
 </head>
 <body>
 
+<c:url var="addUrl" value="/image/add"/>
+
 <form:form class="desktop" modelAttribute="track" method="POST" action="${saveUrl}" enctype="multipart/form-data">
 
     <div class="section">
@@ -40,6 +42,34 @@
         </div>
         <input type="submit" value="Save"/>
     </div>
+
+    <div class="menu">
+        <a href="${addUrl}">Add image</a>
+    </div>
+
+    <table class="list">
+        <thead>
+        <tr>
+            <td>Name</td>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <c:forEach items="${images}" var="image">
+            <c:url var="downloadUrl" value="/image/download?id=${track.id}"/>
+            <c:url var="deleteUrl" value="/image/delete?id=${track.id}"/>
+            <tr>
+                <td><c:out value="${track.name}"/></td>
+                <td class="button"><a href="${downloadUrl}"><img src="${viewImgUrl}"/></a></td>
+                <td class="button"><a href="${deleteUrl}"><img src="${deleteImgUrl}"/></a></td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
+    <c:if test="${empty images}">
+        No images available
+    </c:if>
 
     <br/>
     <br/>

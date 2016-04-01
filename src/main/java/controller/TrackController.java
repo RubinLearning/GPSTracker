@@ -3,6 +3,7 @@ package controller;
 import domain.TrackGPX;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import service.interfaces.ImageService;
 import service.interfaces.TrackService;
 import domain.Track;
 import org.slf4j.Logger;
@@ -34,6 +35,10 @@ public class TrackController {
     @Resource
     private TrackService trackService;
 
+    @Autowired
+    @Resource
+    private ImageService imageService;
+
     @RequestMapping(value = {"/","/track/list"}, method = RequestMethod.GET)
     public String home(Locale locale, Model model){
 
@@ -59,6 +64,7 @@ public class TrackController {
         Track track = trackService.get(trackId);
         model.addAttribute("type", "edit");
         model.addAttribute("track", track);
+        model.addAttribute("images", imageService.getAllByTrackId(trackId));
 
         return "track";
     }
@@ -82,7 +88,7 @@ public class TrackController {
     }
 
     @RequestMapping(value = "/track/delete", method = RequestMethod.GET)
-    public String updateTrek(@RequestParam("id") Long trackId) {
+    public String deleteTrack(@RequestParam("id") Long trackId) {
 
         trackService.delete(trackId);
 
@@ -98,7 +104,7 @@ public class TrackController {
     @RequestMapping(value = "/track/download", method = RequestMethod.GET)
     public String downloadGPX(@RequestParam("id") Long trackId, HttpServletResponse response, Model model) throws GPSTrackerException {
 
-        String filename = "track_" + trackService.get(trackId).getId().toString() + ".gpx";
+        String filename = "track_" + trackId.toString() + ".gpx";
         TrackGPX trackGPX = trackService.getGPXByTrackId(trackId);
 
         if (trackGPX == null) {
