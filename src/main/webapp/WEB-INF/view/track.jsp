@@ -12,18 +12,20 @@
 </head>
 <body>
 
-<c:url var="addUrl" value="/image/add"/>
+<c:url var="addUrl" value="/track/${trackId}/image/new"/>
+<c:url var="deleteImgUrl" value="/resources/img/delete.png"/>
+<c:url var="viewImgUrl" value="/resources/img/view.png"/>
 
 <form:form class="desktop" modelAttribute="track" method="POST" action="${saveUrl}" enctype="multipart/form-data">
 
     <div class="section">
         <c:choose>
-            <c:when test="${type=='edit'}">
-                <c:url var="saveUrl" value="/track/edit?id=${track.id}"/>
+            <c:when test="${type=='existing'}">
+                <c:url var="saveUrl" value="/track/${track.id}"/>
                 Track
             </c:when>
-            <c:when test="${type=='add'}">
-                <c:url var="saveUrl" value="/track/add"/>
+            <c:when test="${type=='new'}">
+                <c:url var="saveUrl" value="/track/new"/>
                 new Track
             </c:when>
         </c:choose>
@@ -34,13 +36,10 @@
             Name
             <form:input type="text" path="name"/>
         </form:label>
-    </div>
-
-    <div>
         <div class="file">
             <input type="file" name="file" accept=".gpx">
         </div>
-        <input type="submit" value="Save"/>
+        </br>
     </div>
 
     <div class="menu">
@@ -57,10 +56,10 @@
         </thead>
         <tbody>
         <c:forEach items="${images}" var="image">
-            <c:url var="downloadUrl" value="/image/download?id=${track.id}"/>
-            <c:url var="deleteUrl" value="/image/delete?id=${track.id}"/>
+            <c:url var="downloadUrl" value="/track/${trackId}/image/${image.id}"/>
+            <c:url var="deleteUrl" value="/track/${trackId}/image/delete?id=${image.id}"/>
             <tr>
-                <td><c:out value="${track.name}"/></td>
+                <td><c:out value="${image.name}"/></td>
                 <td class="button"><a href="${downloadUrl}"><img src="${viewImgUrl}"/></a></td>
                 <td class="button"><a href="${deleteUrl}"><img src="${deleteImgUrl}"/></a></td>
             </tr>
@@ -70,6 +69,12 @@
     <c:if test="${empty images}">
         No images available
     </c:if>
+
+    <br/>
+
+    <div>
+        <input type="submit" value="Save"/>
+    </div>
 
     <br/>
     <br/>

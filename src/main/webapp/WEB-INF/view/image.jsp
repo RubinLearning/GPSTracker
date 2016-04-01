@@ -12,7 +12,7 @@
 </head>
 <body>
 
-<c:url var="saveUrl" value="/image/add?id=${trackId}"/>
+<c:url var="saveUrl" value="/track/${trackId}/image/new"/>
 
 <form:form class="desktop" method="POST" action="${saveUrl}" enctype="multipart/form-data">
 
@@ -22,7 +22,7 @@
 
     <div>
         <div class="file">
-            <input type="file" name="file" accept=".image/jpeg">
+            <input type="file" name="file" accept="image/jpeg">
         </div>
         <input type="submit" value="Save"/>
     </div>

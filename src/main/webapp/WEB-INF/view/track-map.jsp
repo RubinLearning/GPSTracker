@@ -11,7 +11,7 @@
 </head>
 <body>
 
-<c:url var="downloadUrl" value="/track/download?id=${trackId}"/>
+<c:url var="downloadUrl" value="/track/${trackId}/map/download"/>
 
 <div id="map"></div>
 

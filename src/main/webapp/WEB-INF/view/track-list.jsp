@@ -11,7 +11,7 @@
 </head>
 <body>
 
-<c:url var="addUrl" value="/track/add"/>
+<c:url var="addUrl" value="/track/new"/>
 <c:url var="deleteImgUrl" value="/resources/img/delete.png"/>
 <c:url var="viewImgUrl" value="/resources/img/view.png"/>
 
@@ -35,8 +35,8 @@
         </thead>
         <tbody>
         <c:forEach items="${tracks}" var="track">
-            <c:url var="editUrl" value="/track/edit?id=${track.id}"/>
-            <c:url var="viewUrl" value="/track/view?id=${track.id}"/>
+            <c:url var="editUrl" value="/track/${track.id}"/>
+            <c:url var="viewUrl" value="/track/${track.id}/map"/>
             <c:url var="deleteUrl" value="/track/delete?id=${track.id}"/>
             <tr>
                 <td><a href="${editUrl}"><c:out value="${track.name}"/></a></td>

@@ -11,6 +11,9 @@ public class TrackIMG {
     @Column(name = "ID")
     Long id;
 
+    @Column(name="NAME")
+    String name;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "TRACK_ID")
     Track track;
@@ -18,6 +21,14 @@ public class TrackIMG {
     @Column(name = "IMG", length = 10000000)
     @Lob
     byte[] IMG;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public Long getId() {
         return id;

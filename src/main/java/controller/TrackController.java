@@ -39,7 +39,7 @@ public class TrackController {
     @Resource
     private ImageService imageService;
 
-    @RequestMapping(value = {"/","/track/list"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/","/tracks"}, method = RequestMethod.GET)
     public String home(Locale locale, Model model){
 
         List<Track> tracks = trackService.getAll();
@@ -48,43 +48,44 @@ public class TrackController {
         return "track-list";
     }
 
-    @RequestMapping(value = "/track/add", method = RequestMethod.GET)
-    public String getAddTrackPage(Model model) {
+    @RequestMapping(value = "/track/{trackId}", method = RequestMethod.GET)
+    public String getEditTrackPage(@PathVariable("trackId") Long trackId, Model model) {
 
-        Track track = new Track();
-        model.addAttribute("type", "add");
-        model.addAttribute("track", track);
-
-        return "track";
-    }
-
-    @RequestMapping(value = "/track/edit", method = RequestMethod.GET)
-    public String getEditTrackPage(@RequestParam("id") Long trackId, Model model) {
-
-        Track track = trackService.get(trackId);
-        model.addAttribute("type", "edit");
-        model.addAttribute("track", track);
+        Track existingTrack = trackService.get(trackId);
+        model.addAttribute("type", "existing");
+        model.addAttribute("track", existingTrack);
         model.addAttribute("images", imageService.getAllByTrackId(trackId));
 
         return "track";
     }
 
-    @RequestMapping(value = "/track/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/track/{trackId}", method = RequestMethod.POST)
+    public String updateTrek(@PathVariable("trackId") Long trackId, @RequestParam("file") MultipartFile file, @ModelAttribute("track") Track track) throws GPSTrackerException{
+
+        track.setId(trackId);
+        trackService.edit(track);
+        trackService.updateGPX(track, file);
+
+        return "redirect:/tracks";
+    }
+
+    @RequestMapping(value = "/track/new", method = RequestMethod.GET)
+    public String getAddTrackPage(Model model) {
+
+        Track track = new Track();
+        model.addAttribute("type", "new");
+        model.addAttribute("track", track);
+
+        return "track";
+    }
+
+    @RequestMapping(value = "/track/new", method = RequestMethod.POST)
     public String addTrek(@RequestParam("file") MultipartFile file, @ModelAttribute("trek") Track track) throws GPSTrackerException{
 
         trackService.add(track);
         trackService.updateGPX(track, file);
 
-        return "redirect:/track/list";
-    }
-
-    @RequestMapping(value = "/track/edit", method = RequestMethod.POST)
-    public String updateTrek(@RequestParam("id") Long trackId, @RequestParam("file") MultipartFile file, @ModelAttribute("trek") Track track) throws GPSTrackerException{
-
-        trackService.edit(track);
-        trackService.updateGPX(track, file);
-
-        return "redirect:/track/list";
+        return "redirect:/tracks";
     }
 
     @RequestMapping(value = "/track/delete", method = RequestMethod.GET)
@@ -92,24 +93,24 @@ public class TrackController {
 
         trackService.delete(trackId);
 
-        return "redirect:/track/list";
+        return "redirect:/tracks";
     }
 
-    @RequestMapping(value = "/track/view", method = RequestMethod.GET)
-    public String viewGPX(@RequestParam("id") Long trackId, Model model) throws GPSTrackerException {
+    @RequestMapping(value = "/track/{trackId}/map", method = RequestMethod.GET)
+    public String getTrackMapPage(@PathVariable("trackId") Long trackId, Model model) throws GPSTrackerException {
         model.addAttribute("trackId", trackId);
         return "track-map";
     }
 
-    @RequestMapping(value = "/track/download", method = RequestMethod.GET)
-    public String downloadGPX(@RequestParam("id") Long trackId, HttpServletResponse response, Model model) throws GPSTrackerException {
+    @RequestMapping(value = "/track/{trackId}/map/download", method = RequestMethod.GET)
+    public String downloadGPX(@PathVariable("trackId") Long trackId, HttpServletResponse response, Model model) throws GPSTrackerException {
 
         String filename = "track_" + trackId.toString() + ".gpx";
         TrackGPX trackGPX = trackService.getGPXByTrackId(trackId);
 
         if (trackGPX == null) {
             model.addAttribute("contentError", GPSTrackerErrorType.LACK_OF_TRACK_FILE.getName());
-            return "redirect:/track/list";
+            return "redirect:/tracks";
         }
 
         response.setContentType("application/xml");

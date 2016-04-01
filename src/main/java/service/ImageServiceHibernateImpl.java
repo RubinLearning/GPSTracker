@@ -1,7 +1,6 @@
 package service;
 
 import domain.Track;
-import domain.TrackGPX;
 import domain.TrackIMG;
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
@@ -30,6 +29,7 @@ public class ImageServiceHibernateImpl implements ImageService{
     public List<TrackIMG> getAllByTrackId(Long trackId) {
         Session session = sessionFactory.getCurrentSession();
         Query query = session.createQuery("SELECT ti FROM TrackIMG as ti where ti.track.id = :trackId order by ti.id");
+        query.setParameter("trackId", trackId);
         return query.list();
     }
 
@@ -52,6 +52,7 @@ public class ImageServiceHibernateImpl implements ImageService{
         try {
             byte[] bytes = file.getBytes();
             TrackIMG image = new TrackIMG();
+            image.setName(file.getOriginalFilename());
             image.setTrack(track);
             image.setIMG(bytes);
             session.save(image);

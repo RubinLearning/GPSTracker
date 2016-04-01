@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,32 +34,32 @@ public class ImageController {
     @Resource
     private ImageService imageService;
 
-    @RequestMapping(value = "/image/add", method = RequestMethod.GET)
-    public String getAddImagePage(@RequestParam("id") Long trackId, Model model) {
+    @RequestMapping(value = "/track/{trackId}/image/new", method = RequestMethod.GET)
+    public String getAddImagePage(@PathVariable("trackId") Long trackId, Model model) {
         model.addAttribute("trackId", trackId);
         return "image";
     }
 
-    @RequestMapping(value = "/image/add", method = RequestMethod.POST)
-    public String addImage(@RequestParam("id") Long trackId, @RequestParam("file") MultipartFile file) throws GPSTrackerException{
+    @RequestMapping(value = "/track/{trackId}/image/new", method = RequestMethod.POST)
+    public String addImage(@PathVariable("trackId") Long trackId, @RequestParam("file") MultipartFile file) throws GPSTrackerException{
 
         imageService.add(trackId, file);
 
-        return "redirect:/track/edit?id=" + trackId;
+        return "redirect:/track/" + trackId;
     }
 
-    @RequestMapping(value = "/image/download", method = RequestMethod.GET)
-    public String downloadIMG(@RequestParam("id") Long trackId, @RequestParam("id") Long imageId, HttpServletResponse response, Model model) throws GPSTrackerException {
+    @RequestMapping(value = "/track/{trackId}/image/{imageId}", method = RequestMethod.GET)
+    public String downloadIMG(@PathVariable("trackId") Long trackId, @PathVariable("imageId") Long imageId, HttpServletResponse response, Model model) throws GPSTrackerException {
 
         String filename = "img_" + imageId.toString() + ".jpg";
         TrackIMG trackIMG = imageService.get(imageId);
 
         if (trackIMG == null) {
             model.addAttribute("contentError", GPSTrackerErrorType.LACK_OF_IMAGE_FILE.getName());
-            return "redirect:/track/edit?id="+trackId;
+            return "redirect:/track/"+trackId;
         }
 
-        response.setContentType("application/jpeg");
+        response.setContentType("image/jpeg");
         response.setContentLength(trackIMG.getIMG().length);
         String contentDispositionType = "inline";
         response.setHeader("Content-Disposition", String.format(contentDispositionType + "; filename=\"" + filename + "\""));
@@ -80,12 +81,12 @@ public class ImageController {
         return null;
     }
 
-    @RequestMapping(value = "/image/delete", method = RequestMethod.GET)
-    public String deleteImage(@RequestParam("id") Long trackId, @RequestParam("img") Long imageId) {
+    @RequestMapping(value = "/track/{trackId}/image/delete", method = RequestMethod.GET)
+    public String deleteImage(@PathVariable("trackId") Long trackId, @RequestParam("id") Long imageId) {
 
         imageService.delete(imageId);
 
-        return "redirect:/track/edit?id=" + trackId;
+        return "redirect:/track/" + trackId;
     }
 
 }
