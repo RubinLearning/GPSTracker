@@ -22,7 +22,7 @@ import java.util.Map;
 
 @Service
 @Transactional
-public class TrackServiceHibernateImpl implements TrackService{
+public class TrackServiceHibernateImpl implements TrackService {
 
     protected static Logger logger = Logger.getLogger("org/service");
 
@@ -68,7 +68,9 @@ public class TrackServiceHibernateImpl implements TrackService{
             }
         } else {
             Track track = (Track) session.get(Track.class, id);
-            session.delete(track);
+            if (track != null) {
+                session.delete(track);
+            }
         }
     }
 
@@ -82,7 +84,7 @@ public class TrackServiceHibernateImpl implements TrackService{
 
     @Override
     public void updateGPX(Track track, MultipartFile file) throws GPSTrackerException {
-        if (file.isEmpty()) {
+        if ((file == null) || (file.isEmpty())) {
             return;
         }
 

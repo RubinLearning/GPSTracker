@@ -1,16 +1,11 @@
 package DTO;
 
-import com.google.gson.annotations.Expose;
-
 public class IMGGeoTagDTO {
 
-    @Expose
     Long imageId;
 
-    @Expose
     double lat;
 
-    @Expose
     double lng;
 
     public IMGGeoTagDTO(Long imageId, double lat, double lng) {

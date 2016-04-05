@@ -12,7 +12,7 @@ public interface ImageService {
     List<TrackIMG> getAllByTrackId(Long trackId);
 
     TrackIMG get(Long id);
-    void add(Long trackId, MultipartFile file) throws GPSTrackerException;
+    TrackIMG add(Long trackId, MultipartFile file) throws GPSTrackerException;
     void delete(Long id);
 
 }

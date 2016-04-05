@@ -1,8 +1,6 @@
 package controller;
 
 import DTO.IMGGeoTagDTO;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import domain.TrackIMG;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +48,7 @@ public class ImageController {
         return "redirect:/track/" + trackId;
     }
 
-    @RequestMapping(value = "/track/{trackId}/image/{imageId}", method = RequestMethod.GET)
+    @RequestMapping(value = {"/track/{trackId}/image/{imageId}", "/api/track/{trackId}/image/{imageId}"}, method = RequestMethod.GET)
     public String downloadIMG(@PathVariable("trackId") Long trackId, @PathVariable("imageId") Long imageId, HttpServletResponse response, Model model) throws GPSTrackerException {
 
         String filename = "img_" + imageId.toString() + ".jpg";
@@ -93,13 +91,9 @@ public class ImageController {
 
     @RequestMapping(value = "/track/{trackId}/geotags", method = RequestMethod.GET)
     public @ResponseBody
-    String getGeotagsJSONByTrackId(@PathVariable("trackId") Long trackId) {
+    List<IMGGeoTagDTO> getGeotagsJSONByTrackId(@PathVariable("trackId") Long trackId) {
 
-        List<IMGGeoTagDTO> geotags = getGeotagsDTOByTrackId(trackId);
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        String jsonString = gson.toJson(geotags);
-
-        return jsonString;
+        return getGeotagsDTOByTrackId(trackId);
     }
 
     private List<IMGGeoTagDTO> getGeotagsDTOByTrackId(Long trackId) {

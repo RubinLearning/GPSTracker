@@ -1,6 +1,5 @@
 package service;
 
-import DTO.IMGGeoTagDTO;
 import domain.Track;
 import domain.TrackIMG;
 import org.apache.log4j.Logger;
@@ -15,12 +14,11 @@ import utils.GPSTrackerException;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @Transactional
-public class ImageServiceHibernateImpl implements ImageService{
+public class ImageServiceHibernateImpl implements ImageService {
 
     protected static Logger logger = Logger.getLogger("org/service");
 
@@ -43,9 +41,9 @@ public class ImageServiceHibernateImpl implements ImageService{
     }
 
     @Override
-    public void add(Long trackId, MultipartFile file) throws GPSTrackerException {
-        if (file.isEmpty()) {
-            return;
+    public TrackIMG add(Long trackId, MultipartFile file) throws GPSTrackerException {
+        if ((file == null) || (file.isEmpty())) {
+            return null;
         }
 
         Session session = sessionFactory.getCurrentSession();
@@ -58,6 +56,7 @@ public class ImageServiceHibernateImpl implements ImageService{
             image.setTrack(track);
             image.setIMG(bytes);
             session.save(image);
+            return image;
         } catch (IOException e) {
             throw new GPSTrackerException(e.getMessage());
         }
@@ -67,7 +66,9 @@ public class ImageServiceHibernateImpl implements ImageService{
     public void delete(Long id) {
         Session session = sessionFactory.getCurrentSession();
         TrackIMG image = (TrackIMG) session.get(TrackIMG.class, id);
-        session.delete(image);
+        if (image != null) {
+            session.delete(image);
+        }
     }
 
 }

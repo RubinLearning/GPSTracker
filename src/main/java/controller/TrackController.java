@@ -80,7 +80,7 @@ public class TrackController {
     }
 
     @RequestMapping(value = "/track/new", method = RequestMethod.POST)
-    public String addTrek(@RequestParam("file") MultipartFile file, @ModelAttribute("trek") Track track) throws GPSTrackerException{
+    public String addTrek(@RequestParam("file") MultipartFile file, @ModelAttribute("track") Track track) throws GPSTrackerException{
 
         trackService.add(track);
         trackService.updateGPX(track, file);
